@@ -6,16 +6,26 @@ b. Considerar que las palabras pueden estar separadas por más de un espacio con
 #include <string.h>
 #define TAM 500
 
+void leertexto(char  [], int );
+
 int main (){
     char frase[TAM];
     int cantP=0;
+    char flag=' ';
     printf("Ingresar una frase de hasta 500 caracteres: ");
     leertexto(frase, TAM);
-    for (int i = 0; i < TAM; i++)
+    int i=0;
+    while (frase[i]!='\0')
     {
         
+        if (frase[i]!='\0' && flag==' ' && frase[i]!=' ')
+        {
+            cantP+=1;
+        }
+        flag=frase[i];
+        i++;
     }
-    
+    printf("La cantidad de palabras son %d", cantP);
 }
 
 void leertexto(char texto [], int largo){
@@ -26,7 +36,7 @@ void leertexto(char texto [], int largo){
     {
         if (texto[i]=='\n')
         {
-            texto[i]='\n';
+            texto[i]='\0';
         }
         i++;
     }
