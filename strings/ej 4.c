@@ -11,31 +11,79 @@ b. Mostrar el listado de productos con su precio ordenado en forma alfabética p
 #define TAM 50
 #define TXT 4  
 
+int cargaProductos(float [], char [][TXT], int);
+void ventas(char [][TXT], float [], int [], float *, int);
+void minimo(char [][TXT], int [], int);
+int buscarMinimo(int [], int);
+void listado(char [][TXT], float [], int);
+void burbujeo(char [][TXT], float [], int);
+void leeyvalidaInt(int *, int);
+int busqueda(char [][TXT], char [], int);
+void leerTexto(char [], int);
+void leeryValidarTexto(char [], int);
+
 int main(){
     char cod[TAM][TXT];
     float precios[TAM];
     int cantProd=0;
     int cantUV[TAM]={0};
     float recaudacion=0;
-    cantProd=cargaProductos(precios, cod);
+    cantProd=cargaProductos(precios, cod, TAM);
     ventas(cod, precios, cantUV, &recaudacion,cantProd);
     printf("La recaudacion total es %.2f", recaudacion);
     minimo(cod, cantUV, cantProd);
+    listado(cod, precios, cantProd);
+
+    return 0;
 }
 
-int cargaProductos(float precio[], char cod[][TXT]){
+void listado(char cod[][TXT], float precio[], int ce){
+    burbujeo(cod, precio, ce);
+    for (int i = 0; i < ce; i++)
+    {
+        printf("%s - $%.2f\n", cod[i], precio[i]);
+    }
+}
+
+void burbujeo(char cod[][TXT], float precio[], int ce){
+    char AUX[TXT];
+    float auxP;
+    int j, cota = ce - 1;
+    int desordenado = 1;
+
+    while (desordenado)
+    {
+        desordenado = 0;
+        for (j = 0; j < cota; j++)
+        {
+            if (strcmpi(cod[j], cod[j + 1]) > 0)
+            {
+                strcpy(AUX, cod[j]);
+                strcpy(cod[j], cod[j + 1]);
+                strcpy(cod[j + 1], AUX);
+                auxP=precio[j];
+                precio[j]=precio[j+1];
+                precio[j+1]=auxP;
+                desordenado = j;
+            }
+        }
+        cota = desordenado;
+    }
+}
+
+int cargaProductos(float precio[], char cod[][TXT], int ce){
     char codAux[TAM];
     int i=0;
     printf("Ingrese codigo de producto (FIN para terminar):");
-    leeryValidarTexto(codAux, TXT);
-    while (strcmpi(codAux, "FIN")!=0 && i<TAM)
+    leeryValidarTexto(codAux, TAM);
+    while (strcmpi(codAux, "FIN")!=0 && i<ce)
     {   
         strcpy(cod[i], codAux);
         printf("Ingrese precio del producto: ");
         scanf("%f", &precio[i]);
         i++;
         printf("Ingrese codigo de producto (FIN para terminar):");
-        leeryValidarTexto(codAux, 4);
+        leeryValidarTexto(codAux, TAM);
     }
     printf("Seccion cargar productos finalizada.");
     return i;
@@ -50,7 +98,7 @@ void ventas(char cod[][TXT], float precio[], int cantuv[], float *r,int ce){
     while (cant>0)
     {
         printf("Ingrese codigo del producto: ");
-        leeryValidarTexto(codV, TXT);
+        leeryValidarTexto(codV, TAM);
         pos=busqueda(cod, codV, ce);
         if (pos!=-1)
         {
