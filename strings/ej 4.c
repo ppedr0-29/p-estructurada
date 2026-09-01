@@ -15,7 +15,12 @@ int main(){
     char cod[TAM][TXT];
     float precios[TAM];
     int cantProd=0;
+    int cantUV[TAM]={0};
+    float recaudacion=0;
     cantProd=cargaProductos(precios, cod);
+    ventas(cod, precios, cantUV, &recaudacion,cantProd);
+    printf("La recaudacion total es %.2f", recaudacion);
+    minimo(cod, cantUV, cantProd);
 }
 
 int cargaProductos(float precio[], char cod[][TXT]){
@@ -32,15 +37,82 @@ int cargaProductos(float precio[], char cod[][TXT]){
         printf("Ingrese codigo de producto (FIN para terminar):");
         leeryValidarTexto(codAux, 4);
     }
-    
+    printf("Seccion cargar productos finalizada.");
     return i;
 }
 
-void ventas(char cod[][TXT], int ce){
+void ventas(char cod[][TXT], float precio[], int cantuv[], float *r,int ce){
     char codV[TAM];
     int cant;
-    printf("Ingrese codigo del producto: ");
-    leeryValidarTexto(codV, TXT);
+    int pos;
+    printf("Ingrese cantidad vendida del producto (0 corta): ");
+    leeyvalidaInt(&cant, -1);
+    while (cant>0)
+    {
+        printf("Ingrese codigo del producto: ");
+        leeryValidarTexto(codV, TXT);
+        pos=busqueda(cod, codV, ce);
+        if (pos!=-1)
+        {
+            *r+=precio[pos]*cant;
+            cantuv[pos]+=cant;
+        }
+        else{
+            printf("Codigo no existe.");
+        }
+        printf("Ingrese cantidad vendida del producto (0 corta): ");
+        leeyvalidaInt(&cant, -1);
+    }
+    printf("Seccion ventas finalizada.");
+}
+
+void minimo(char cod[][TXT], int cantuv[], int ce){
+    int min=buscarMinimo(cantuv, ce);
+    for (int i = 0; i < ce; i++)
+    {
+        if (cantuv[i]==min)
+        {
+            printf("El producto %s tuvo la menor cantidad vendida con %d", cod[i], cantuv[i]);
+        }
+        
+    }
+    
+}
+
+int buscarMinimo(int cantUV[], int ce){
+    int min=cantUV[0];
+    for (int i = 1; i < ce; i++)
+    {
+        if (cantUV[i]<min)
+        {
+            min=cantUV[i];
+        }
+        
+    }
+    return min;
+}
+
+void leeyvalidaInt(int *dato, int lim){
+    scanf("%d", dato);
+    while (*dato<=lim)
+    {
+        printf("Cantidad incorrecta. Reingrese: ");
+        scanf("%d", dato);
+    }
+}
+
+int busqueda(char cod[][TXT],char codV[], int ce){
+    int pos=-1, i=0, flag=0;
+    while (flag==0 && i<ce)
+    {
+        if (strcmpi(codV, cod[i])==0)
+        {
+            pos=i;
+            flag=1;
+        }
+        i++;
+    }
+    return pos;
 }
 
 void leerTexto(char texto[], int largo){
