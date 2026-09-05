@@ -119,17 +119,17 @@ void munieco(int errores){
         break;
         case 4:
             printf("\nO\n");
-            printf("/|\\ \n");
+            printf(" /|\\ \n");
         break;
         case 5:
             printf("\nO\n");
-            printf("/|\\ \n");
-            printf("/  \n");
+            printf(" /|\\ \n");
+            printf(" /  \n");
         break;
         case 6:
             printf("\nO\n");
-            printf("/|\\ \n");
-            printf("/ \\ \n");
+            printf(" /|\\ \n");
+            printf(" / \\ \n");
         break;
     }
 }
