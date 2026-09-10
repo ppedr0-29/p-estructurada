@@ -86,7 +86,7 @@ void cargaVentas(PRODUCTOS datos[], int ce){
 int ingresoProductos(PRODUCTOS datos[], int ce){
     int i=0;
     PRODUCTOS aux;
-
+    printf("--INFORMACION DE LOS PRODUCTOS--\n");
     aux = ingreso(datos, i);
     while (strcmpi(aux.desc, "FIN")!=0 && i<ce)
     {
@@ -100,10 +100,9 @@ int ingresoProductos(PRODUCTOS datos[], int ce){
 
 PRODUCTOS ingreso(PRODUCTOS datos[], int i){
     PRODUCTOS aux;
-    printf("--INFORMACION DE LOS PRODUCTOS--\n");
     printf("Ingrese descripcion del producto: ");
     leeryValidarTexto(aux.desc, 31);
-    while (strcmpi(aux.desc, "FIN")!=0)
+    if (strcmpi(aux.desc, "FIN")!=0)
     {
         printf("Ingrese codigo de producto: ");
         leeryValidarTexto(aux.cod, 6);
