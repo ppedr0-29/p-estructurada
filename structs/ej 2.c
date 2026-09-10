@@ -14,11 +14,12 @@ El ingreso de datos de las ventas finaliza con una cantidad igual a 0. Se solici
 a. Actualizar la información de los productos con las ventas realizadas en el mes.
 b. Al finalizar, mostrar el listado de productos actualizado, informando:
 DESCRIPCION CANTIDAD UNIDADES IMPORTE TOTAL
-VENDIDAS VENDIDO
+            VENDIDAS          VENDIDO
 XXXXXXX XXXX $XXXXX,XX */
 
 #include <stdio.h>
 #include <string.h>
+#define TAM 50
 
 typedef struct
 {
@@ -29,9 +30,159 @@ typedef struct
     float imp;
 }PRODUCTOS;
 
+int ingresoProductos(PRODUCTOS datos[], int ce);
+PRODUCTOS ingreso(PRODUCTOS datos[], int i);
+void cargaVentas(PRODUCTOS datos[], int ce);
+void listado(PRODUCTOS datos[], int ce);
+int busqueda(PRODUCTOS datos[], int cant, char cod[]);
+void leeyvalidaIntCF(int *dato, int lim);
+void leeyvalidaInt(int *dato, int lim);
+void leeyvalidaF(float *dato, int lim);
+void leerTexto(char texto[], int largo);
+void leeryValidarTexto(char texto[], int largo);
 
 int main (){
-    PRODUCTOS datos[50];
-
+    PRODUCTOS datos[TAM];
+    int cantProductos= ingresoProductos(datos, TAM);
+    cargaVentas(datos, cantProductos);
+    listado(datos, cantProductos);
     return 0;
+}
+
+void listado(PRODUCTOS datos[], int ce){
+    printf("\n%-31s  %-22s  %20s    ", "DESCRIPCION", "CANT.UNIDADES VENDIDAS", "IMPORTE TOTAL VENDIDO");
+    for (int i = 0; i < ce; i++)
+    {   
+        printf("\n%-31s  %-22d  $%20.2f\n ", datos[i].desc, datos[i].cantV, datos[i].imp);
+    }
+    
+}
+
+void cargaVentas(PRODUCTOS datos[], int ce){
+    PRODUCTOS aux;
+    int pos;
+    printf("--VENTAS DEL MES--\n");
+    printf("Ingrese cantidad vendida(0 para cortar): ");
+    leeyvalidaIntCF(&aux.cantV, 0);
+    while (aux.cantV!=0)
+    {
+        printf("Ingrese codigo de producto: ");
+        leeryValidarTexto(aux.cod, 6);
+        pos=busqueda(datos, ce, aux.cod);
+        if (pos!=-1)
+        {
+            datos[pos].cantV+=aux.cantV;
+            datos[pos].imp+= (float)(aux.cantV*datos[pos].precio);
+            printf("Producto actualizado.\n");
+        }else{
+            printf("Codigo no encontrado. ");
+        }
+        printf("Ingrese cantidad vendida(0 para cortar): ");
+        leeyvalidaIntCF(&aux.cantV, 0);
+    }
+    printf("--VENTAS FINALIZADO--\n");
+}
+
+int ingresoProductos(PRODUCTOS datos[], int ce){
+    int i=0;
+    PRODUCTOS aux;
+
+    aux = ingreso(datos, i);
+    while (strcmpi(aux.desc, "FIN")!=0 && i<ce)
+    {
+        datos[i] = aux;
+        i++;
+        aux = ingreso(datos, i);
+    }
+    printf("INGRESO FINALIZADO\n");
+    return i;
+}
+
+PRODUCTOS ingreso(PRODUCTOS datos[], int i){
+    PRODUCTOS aux;
+    printf("--INFORMACION DE LOS PRODUCTOS--\n");
+    printf("Ingrese descripcion del producto: ");
+    leeryValidarTexto(aux.desc, 31);
+    while (strcmpi(aux.desc, "FIN")!=0)
+    {
+        printf("Ingrese codigo de producto: ");
+        leeryValidarTexto(aux.cod, 6);
+        while (busqueda(datos, i, aux.cod)!=-1)
+        {
+            printf("El codigo ya fue ingresado. Reingrese: ");
+            leeryValidarTexto(aux.cod, 6);
+        }
+        printf("Ingrese precio del neumatico %s:", aux.cod);
+        leeyvalidaF(&aux.precio, 1);
+        printf("Ingrese cantidad de unidades vendidas el mes pasado: ");
+        leeyvalidaInt(&aux.cantV, 0);
+        printf("Ingrese importe total vendido el mes anterior: ");
+        leeyvalidaF(&aux.imp, 0);
+    }
+    return aux;
+}
+
+void leeyvalidaIntCF(int *dato, int lim){
+    scanf("%d", dato);
+    while (*dato<lim && *dato!=0)
+    {
+        printf("Error. Reingrese: ");
+        scanf("%d", dato);
+    }
+}
+
+void leeyvalidaInt(int *dato, int lim){
+    scanf("%d", dato);
+    while (*dato<lim)
+    {
+        printf("Error. Reingrese: ");
+        scanf("%d", dato);
+    }
+}
+
+void leeyvalidaF(float *dato, int lim){
+    scanf("%f", dato);
+    while (*dato<lim)
+    {
+        printf("Error. Reingrese: ");
+        scanf("%f", dato);
+    }
+}
+
+int busqueda(PRODUCTOS datos[], int cant, char cod[]){
+    int pos=-1, i=0;
+    while (pos==-1 && i<cant)
+    {
+        if (strcmpi(datos[i].cod, cod)==0)
+        {
+            pos=i;
+        }
+        i++;
+    }
+    return pos;
+}
+
+void leerTexto(char texto[], int largo){
+    int i=0;
+    fflush(stdin);
+    fgets(texto, largo, stdin);
+    while (texto[i]!='\0')
+    {
+        if (texto[i]=='\n')
+        {
+            texto[i]='\0';
+        }
+        i++;
+    }
+
+}
+
+void leeryValidarTexto(char texto[], int largo){
+    leerTexto(texto, largo);
+    while (strlen(texto)==0)
+    {
+        printf("Error. Reingrese: ");
+        leerTexto(texto, largo);
+    }
+
 }
