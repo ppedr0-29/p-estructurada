@@ -53,7 +53,7 @@ void INFORME_PROMO(ALUMNOS datos[], int ce){
     {
         if (datos[i].nota1>=7 && datos[i].nota2>=7)
         {
-            printf("El alumno %s con DNI:%d promociono con %.2f", datos[i].ayn, datos[i].dni, datos[i].promedio);
+            printf("El alumno %s con DNI:%d promociono con %.2f\n", datos[i].ayn, datos[i].dni, datos[i].promedio);
         }
         
     }
@@ -72,14 +72,14 @@ void RESULTADO(ALUMNOS datos[], int ce){
         }
         
     }
-    printf("Los alumnos aprobados son %d", acumA);
-    printf("Los alumnos reprobados son %d", acumR);
+    printf("Los alumnos aprobados son %d\n", acumA);
+    printf("Los alumnos reprobados son %d\n", acumR);
 }
 
 int INGRESO(ALUMNOS datos[], int ce){
     ALUMNOS aux;
     int i=0;
-    printf("--INGRESO ALUMNOS--");
+    printf("--INGRESO ALUMNOS--\n");
     aux=ingreso(datos, i);
     while (aux.dni!=0 && i<ce)
     {
