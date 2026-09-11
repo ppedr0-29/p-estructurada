@@ -30,16 +30,16 @@ typedef struct
     float imp;
 }PRODUCTOS;
 
-int ingresoProductos(PRODUCTOS datos[], int ce);
-PRODUCTOS ingreso(PRODUCTOS datos[], int i);
-void cargaVentas(PRODUCTOS datos[], int ce);
-void listado(PRODUCTOS datos[], int ce);
-int busqueda(PRODUCTOS datos[], int cant, char cod[]);
-void leeyvalidaIntCF(int *dato, int lim);
-void leeyvalidaInt(int *dato, int lim);
-void leeyvalidaF(float *dato, int lim);
-void leerTexto(char texto[], int largo);
-void leeryValidarTexto(char texto[], int largo);
+int ingresoProductos(PRODUCTOS [], int );
+PRODUCTOS ingreso(PRODUCTOS [], int );
+void cargaVentas(PRODUCTOS [], int );
+void listado(PRODUCTOS [], int );
+int busqueda(PRODUCTOS [], int , char []);
+void leeyvalidaIntCF(int *, int );
+void leeyvalidaInt(int *, int );
+void leeyvalidaF(float *, int );
+void leerTexto(char [], int );
+void leeryValidarTexto(char [], int );
 
 int main (){
     PRODUCTOS datos[TAM];
