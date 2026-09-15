@@ -41,8 +41,8 @@ typedef struct
 }VENTAS;
 
 LIBRO* INGRESO(LIBRO *datos, int *mem, int *cantL);
-LIBRO ingreso(LIBRO *datos);
-void ventas(VENTAS info, LIBRO *datos, int *ce);
+LIBRO ingreso();
+void ventas(VENTAS ,LIBRO *datos, int *ce);
 int busqueda(LIBRO *datos, int cod, int *ce);
 void listado(LIBRO *datos, int *ce);
 void leeyvalidaInt(int *dato, int lim);
@@ -62,8 +62,8 @@ int main(){
         exit(1);
     }
     datos= INGRESO(datos, &capInicial, &cantLibros);
-    ventas(info, datos, &capInicial);
-    listado(datos, &capInicial);
+    ventas(info,datos, &cantLibros);
+    listado(datos, &cantLibros);
 
     free(datos);
 
@@ -78,25 +78,29 @@ void listado(LIBRO *datos, int *ce){
     }
 }
 
-void ventas(VENTAS info, LIBRO *datos,int *ce){
-    VENTAS aux;
+void ventas(VENTAS info,LIBRO *datos,int *ce){
     int pos;
     printf("--ACTUALIZACION STOCK--\n");
     printf("Ingrese codigo ISBN: ");
-    leeyvalidaIntE2CF(&aux.cod, 10000000, 99999999, 0);
-    while (aux.cod!=0)
+    leeyvalidaIntE2CF(&info.cod, 10000000, 99999999, 0);
+    while (info.cod!=0)
     {
-        pos=busqueda(datos, aux.cod, ce);
+        pos=busqueda(datos, info.cod, ce);
         if (pos!=-1)
         {   
             printf("Ingrese cantidad vendida: ");
-            leeyvalidaInt(&aux.cantV, 1);
-            (datos+pos)->cantStock-=aux.cantV;
+            leeyvalidaInt(&info.cantV, 1);
+            if ((datos+pos)->cantStock>=info.cantV)
+            {
+                (datos+pos)->cantStock-=info.cantV;
+            }else{
+                printf("La cantidad vendida supera el stock. ");
+            }
         }else{
             printf("El codigo no existe. ");
         }
         printf("Ingrese codigo ISBN: ");
-        leeyvalidaIntE2CF(&aux.cod, 10000000, 99999999, 0);
+        leeyvalidaIntE2CF(&info.cod, 10000000, 99999999, 0);
     }
     printf("--Actualizacion finalizada.--");
 }
@@ -118,7 +122,7 @@ LIBRO* INGRESO(LIBRO *datos, int *mem, int *cantL){
     LIBRO aux;
     int i=0;
     printf("--INGRESO LIBROS--\n");
-    aux=ingreso(datos);
+    aux=ingreso();
     while (aux.codigo!=0)
     {
         if(i==*mem){
@@ -132,13 +136,13 @@ LIBRO* INGRESO(LIBRO *datos, int *mem, int *cantL){
         }
         *(datos+i)=aux;
         i++;
-        aux=ingreso(datos);
+        aux=ingreso();
     }
     *cantL=i;
     return datos;
 }
 
-LIBRO ingreso(LIBRO *datos){
+LIBRO ingreso(){
     LIBRO aux;
     printf("Ingrese codigo ISBN: ");
     leeyvalidaIntE2CF(&aux.codigo, 10000000, 99999999, 0);
