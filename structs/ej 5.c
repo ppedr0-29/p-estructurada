@@ -33,6 +33,16 @@ typedef struct
     int numVendedor;
 }VENTAS;
 
+VENTAS* IngresoVentas(VENTAS*, CLIENTE[], int*, int*);
+VENTAS ingresoV(CLIENTE[]);
+void ingresoClientes(CLIENTE[], int);
+CLIENTE ingreso(CLIENTE[], int);
+int busqueda(CLIENTE[], int, int);
+void leeyvalidaF(float*, int);
+void leeyvalidaIntE2(int*, int, int);
+void leeyvalidaIntE2CF(int*, int, int, int);
+void leerTexto(char[], int);
+void leeryValidarTexto(char[], int);
 
 int main(){
     CLIENTE datos[TAM];
@@ -44,18 +54,67 @@ int main(){
         printf("Error al reservar memoria.");
         exit(1);
     }
-    
+    ingresoClientes(datos, TAM);
+    int cantVentas;
+    cantVentas = IngresoVentas(info, datos, &capacidadInicial, &cantVentas);  
 
     return 0;
 }
 
-int ingresoClientes(CLIENTE datos[], int ce){
+void ventasxcliente(CLIENTE datos[], VENTAS *info, int cant){ 
+
+}
+
+VENTAS* IngresoVentas(VENTAS *info, CLIENTE datos[], int *mem, int *cant){
+    VENTAS aux;
+    int i=0;
+    aux=ingresoV(datos);
+    while(aux.cod!=999){
+        if(i==*mem){
+            *mem+=5;
+            info=(VENTAS *)realloc(info, *mem*sizeof(VENTAS));
+            if (info==NULL){
+                printf("Error al reservar memoria.");
+                exit(1);
+            }
+        }
+        *(info+i)=aux;
+        i++;
+        aux=ingresoV(datos);
+    }
+    *cant=i;
+    return info;
+}
+
+VENTAS ingresoV(CLIENTE datos[]){
+    VENTAS aux;
+    int pos=-1;
+    printf("Ingrese numero de cliente(999 para cortar): ");
+    leeyvalidaIntE2CF(&aux.cod, 1000, 9999, 999);
+    while(aux.cod!=999 && pos==-1){
+        pos=busqueda(datos, TAM, aux.cod);
+        if (pos!=-1){
+            printf("Ingrese precio: ");
+            leeyvalidaF(&aux.importe, 1);
+            printf("Ingrese numero de vendedor(1-10): ");
+            leeyvalidaIntE2(&aux.numVendedor,1,10);
+            printf("Venta registrada.\n");
+            printf("Ingrese numero de cliente(999 para cortar): ");
+        }else{
+            printf("El numero no existe. Reingrese: ");
+        }
+        leeyvalidaIntE2CF(&aux.cod, 1000, 9999, 999);
+        pos=busqueda(datos, TAM, aux.cod);
+    }
+    return aux;
+}
+
+void ingresoClientes(CLIENTE datos[], int ce){
     int i;
     for (i = 0; i < ce; i++)
     {
         datos[i]=ingreso(datos, i);
     }
-    return i;
 }
 
 CLIENTE ingreso(CLIENTE datos[], int i){
