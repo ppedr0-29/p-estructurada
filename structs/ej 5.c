@@ -43,6 +43,8 @@ void leeyvalidaIntE2(int*, int, int);
 void leeyvalidaIntE2CF(int*, int, int, int);
 void leerTexto(char[], int);
 void leeryValidarTexto(char[], int);
+void ventasxcliente(CLIENTE[], VENTAS*, int*, int);
+void ventasxvendedor(VENTAS*, int*);
 
 int main(){
     CLIENTE datos[TAM];
@@ -56,13 +58,39 @@ int main(){
     }
     ingresoClientes(datos, TAM);
     int cantVentas;
-    cantVentas = IngresoVentas(info, datos, &capacidadInicial, &cantVentas);  
+    info = IngresoVentas(info, datos, &capacidadInicial, &cantVentas);  
 
     return 0;
 }
 
-void ventasxcliente(CLIENTE datos[], VENTAS *info, int cant){ 
+void ventasxcliente(CLIENTE datos[], VENTAS *info, int *cantV, int ce){ 
+    int acum;
+    for (int i = 0; i < ce; i++)
+    {
+        acum=0;
+        for (int j = 0; j < *cantV; j++)
+        {
+            if (datos[i].cod==(info+j)->cod)
+            {
+                acum++;
+            }
+        }
+        printf("%d ventas al cliente %d", acum, datos[i].cod);
+    }
+    
+}
 
+void ventasxvendedor(VENTAS *info, int *cantV){
+    int vendedor[10]={0};
+    for (int i = 0; i < *cantV; i++)
+    {
+        vendedor[(info+i)->numVendedor-1]++;
+    }
+    for (int j = 0; j < 10; j++)
+    {
+        printf("%d ventas del vendedor %d", vendedor[j], j+1);
+    }
+    
 }
 
 VENTAS* IngresoVentas(VENTAS *info, CLIENTE datos[], int *mem, int *cant){
