@@ -109,8 +109,6 @@ int ingreso(char nombres[][TAM], int dni[], int ce){
         leeyvalidaE2(&dni[i], 10000000, 99999999);
         strcpy(nombres[i], nombreAux);
         i++;
-        printf("Ingrese nombre del alumno: ");
-        leeryValidarTexto(nombreAux, TAM);
     }
     
     return i;
