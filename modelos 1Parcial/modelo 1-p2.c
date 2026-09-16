@@ -40,20 +40,20 @@ typedef struct
     int cantV;
 }VENTAS;
 
-LIBRO* INGRESO(LIBRO *datos, int *mem, int *cantL);
-LIBRO ingreso();
-void ventas(LIBRO *datos, int *ce);
-int busqueda(LIBRO *datos, int cod, int *ce);
-void listado(LIBRO *datos, int *ce);
-void leeyvalidaInt(int *dato, int lim);
-void leeyvalidaIntE2CF(int *dato, int min, int max, int cf);
-void leerTexto(char texto[], int largo);
-void leeryValidarTexto(char texto[], int largo);
+LIBRO* INGRESO(LIBRO *, int *, int *);
+LIBRO ingreso(LIBRO *, int *);
+void ventas(LIBRO *, int *);
+int busqueda(LIBRO *, int , int *);
+void listado(LIBRO *, int *);
+void leeyvalidaInt(int *, int );
+void leeyvalidaIntE2CF(int *, int , int , int );
+void leerTexto(char [], int );
+void leeryValidarTexto(char [], int );
 
 int main(){
     LIBRO *datos;
     int capInicial=10;
-    int cantLibros;
+    int cantLibros=0;
     datos=(LIBRO*)malloc(capInicial*sizeof(LIBRO));
     if (datos==NULL)
     {
@@ -122,7 +122,7 @@ LIBRO* INGRESO(LIBRO *datos, int *mem, int *cantL){
     LIBRO aux;
     int i=0;
     printf("--INGRESO LIBROS--\n");
-    aux=ingreso();
+    aux=ingreso(datos, &i);
     while (aux.codigo!=0)
     {
         if(i==*mem){
@@ -136,18 +136,23 @@ LIBRO* INGRESO(LIBRO *datos, int *mem, int *cantL){
         }
         *(datos+i)=aux;
         i++;
-        aux=ingreso();
+        aux=ingreso(datos, &i);
     }
     *cantL=i;
     return datos;
 }
 
-LIBRO ingreso(){
+LIBRO ingreso(LIBRO *datos, int *ce){
     LIBRO aux;
     printf("Ingrese codigo ISBN: ");
     leeyvalidaIntE2CF(&aux.codigo, 10000000, 99999999, 0);
     if (aux.codigo!=0)
     {
+        while (busqueda(datos, aux.codigo, ce)!=-1)
+        {
+            printf("Codigo ya ingresado. Reingrese: ");
+            leeyvalidaIntE2CF(&aux.codigo, 10000000, 99999999, 0);
+        }
         printf("Ingrese titulo del libro: ");
         leeryValidarTexto(aux.titulo, 51);
         printf("Ingrese autor del libro: ");
