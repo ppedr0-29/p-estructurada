@@ -102,7 +102,7 @@ void ventas(LIBRO *datos,int *ce){
         printf("Ingrese codigo ISBN: ");
         leeyvalidaIntE2CF(&info.cod, 10000000, 99999999, 0);
     }
-    printf("--Actualizacion finalizada.--");
+    printf("--Actualizacion finalizada.--\n");
 }
 
 int busqueda(LIBRO *datos, int cod, int *ce){
