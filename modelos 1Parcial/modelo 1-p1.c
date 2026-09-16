@@ -23,12 +23,10 @@ int main(){
         {
             valida = validarF6(patente, 6);
         }
-        else if (strlen(patente)==7)
-        {
+        else if (strlen(patente)==7){
             valida = validarF7(patente, 7);
         }
-        if (valida == 1)
-        {
+        if (valida == 1){
             printf("Patente Valida.\n");
         }
         else 

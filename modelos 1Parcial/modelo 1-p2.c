@@ -42,7 +42,7 @@ typedef struct
 
 LIBRO* INGRESO(LIBRO *datos, int *mem, int *cantL);
 LIBRO ingreso();
-void ventas(VENTAS ,LIBRO *datos, int *ce);
+void ventas(LIBRO *datos, int *ce);
 int busqueda(LIBRO *datos, int cod, int *ce);
 void listado(LIBRO *datos, int *ce);
 void leeyvalidaInt(int *dato, int lim);
@@ -52,7 +52,6 @@ void leeryValidarTexto(char texto[], int largo);
 
 int main(){
     LIBRO *datos;
-    VENTAS info;
     int capInicial=10;
     int cantLibros;
     datos=(LIBRO*)malloc(capInicial*sizeof(LIBRO));
@@ -62,7 +61,7 @@ int main(){
         exit(1);
     }
     datos= INGRESO(datos, &capInicial, &cantLibros);
-    ventas(info,datos, &cantLibros);
+    ventas(datos, &cantLibros);
     listado(datos, &cantLibros);
 
     free(datos);
@@ -78,7 +77,8 @@ void listado(LIBRO *datos, int *ce){
     }
 }
 
-void ventas(VENTAS info,LIBRO *datos,int *ce){
+void ventas(LIBRO *datos,int *ce){
+    VENTAS info;
     int pos;
     printf("--ACTUALIZACION STOCK--\n");
     printf("Ingrese codigo ISBN: ");
