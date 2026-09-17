@@ -13,214 +13,269 @@ b. La cantidad de ventas realizadas por vendedor.
 c. Informar en forma ordenada por total facturado (modo descendente), el total facturado a cada
 cliente, informando:
 CODIGO DE CLIENTE NOMBRE Y APELLIDO TOTAL FACTURADO
-X XXXXX XXXXXXXX $ XXXXXXXXX,XX */
+X XXXXX XXXXXXXX $ XXXXXXXXX,XX*/
 
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #define TAM 100
+#define COD_MIN 1000
+#define COD_MAX 9999
+#define COD_FIN 999
+#define NYA_LEN 51
 
 typedef struct
 {
-    int cod; //numero de cliente
-    char nya[51];
-}CLIENTE;
+    int cod;
+    char nya[NYA_LEN];
+} CLIENTE;
 
-typedef struct
-{
-    int cod; //numero de cliente
-    float importe;
-    int numVendedor;
-}VENTAS;
-
-VENTAS* IngresoVentas(VENTAS*, CLIENTE[], int*, int*);
-VENTAS ingresoV(CLIENTE[]);
 void ingresoClientes(CLIENTE[], int);
 CLIENTE ingreso(CLIENTE[], int);
 int busqueda(CLIENTE[], int, int);
-void leeyvalidaF(float*, int);
-void leeyvalidaIntE2(int*, int, int);
-void leeyvalidaIntE2CF(int*, int, int, int);
-void leerTexto(char[], int);
-void leeryValidarTexto(char[], int);
-void ventasxcliente(CLIENTE[], VENTAS*, int*, int);
-void ventasxvendedor(VENTAS*, int*);
+int IngresoVentas(CLIENTE[], int, int[], float[], int[]);
+void ordenarPorFacturado(CLIENTE[], float[], int);
+void listado(CLIENTE[], float[], int);
+void mostrarVentasPorCliente(CLIENTE[], int[], int);
+void mostrarVentasPorVendedor(int[], int);
+int leeyvalidaInt(int);
+int leeyvalidaIntE2(int, int);
+int leeyvalidaIntE2CF(int, int, int);
+float leeyvalidaF(float);
+int leerTexto(char[], int);
+int leeryValidarTexto(char[], int);
 
-int main(){
+int main()
+{
     CLIENTE datos[TAM];
-    VENTAS *info;
-    int capacidadInicial=5;
-    info= (VENTAS *)malloc(capacidadInicial *sizeof(VENTAS));
-    if (info==NULL)
-    {
-        printf("Error al reservar memoria.");
-        exit(1);
-    }
-    ingresoClientes(datos, TAM);
+    int cantVentasCliente[TAM] = {0};
+    float totalFacturado[TAM] = {0};
+    int ventasVendedor[10] = {0};
     int cantVentas;
-    info = IngresoVentas(info, datos, &capacidadInicial, &cantVentas);  
+
+    ingresoClientes(datos, TAM);
+    cantVentas = IngresoVentas(datos, TAM, cantVentasCliente, totalFacturado, ventasVendedor);
+
+    mostrarVentasPorCliente(datos, cantVentasCliente, TAM);
+    mostrarVentasPorVendedor(ventasVendedor, 10);
+
+    ordenarPorFacturado(datos, totalFacturado, TAM);
+    listado(datos, totalFacturado, TAM);
 
     return 0;
 }
 
-void ventasxcliente(CLIENTE datos[], VENTAS *info, int *cantV, int ce){ 
-    int acum;
-    for (int i = 0; i < ce; i++)
-    {
-        acum=0;
-        for (int j = 0; j < *cantV; j++)
-        {
-            if (datos[i].cod==(info+j)->cod)
-            {
-                acum++;
-            }
-        }
-        printf("%d ventas al cliente %d", acum, datos[i].cod);
-    }
-    
-}
-
-void ventasxvendedor(VENTAS *info, int *cantV){
-    int vendedor[10]={0};
-    for (int i = 0; i < *cantV; i++)
-    {
-        vendedor[(info+i)->numVendedor-1]++;
-    }
-    for (int j = 0; j < 10; j++)
-    {
-        printf("%d ventas del vendedor %d", vendedor[j], j+1);
-    }
-    
-}
-
-VENTAS* IngresoVentas(VENTAS *info, CLIENTE datos[], int *mem, int *cant){
-    VENTAS aux;
-    int i=0;
-    aux=ingresoV(datos);
-    while(aux.cod!=999){
-        if(i==*mem){
-            *mem+=5;
-            info=(VENTAS *)realloc(info, *mem*sizeof(VENTAS));
-            if (info==NULL){
-                printf("Error al reservar memoria.");
-                exit(1);
-            }
-        }
-        *(info+i)=aux;
-        i++;
-        aux=ingresoV(datos);
-    }
-    *cant=i;
-    return info;
-}
-
-VENTAS ingresoV(CLIENTE datos[]){
-    VENTAS aux;
-    int pos=-1;
-    printf("Ingrese numero de cliente(999 para cortar): ");
-    leeyvalidaIntE2CF(&aux.cod, 1000, 9999, 999);
-    while(aux.cod!=999 && pos==-1){
-        pos=busqueda(datos, TAM, aux.cod);
-        if (pos!=-1){
-            printf("Ingrese precio: ");
-            leeyvalidaF(&aux.importe, 1);
-            printf("Ingrese numero de vendedor(1-10): ");
-            leeyvalidaIntE2(&aux.numVendedor,1,10);
-            printf("Venta registrada.\n");
-            printf("Ingrese numero de cliente(999 para cortar): ");
-        }else{
-            printf("El numero no existe. Reingrese: ");
-        }
-        leeyvalidaIntE2CF(&aux.cod, 1000, 9999, 999);
-        pos=busqueda(datos, TAM, aux.cod);
-    }
-    return aux;
-}
-
-void ingresoClientes(CLIENTE datos[], int ce){
+void ingresoClientes(CLIENTE datos[], int ce)
+{
     int i;
+
     for (i = 0; i < ce; i++)
     {
-        datos[i]=ingreso(datos, i);
+        datos[i] = ingreso(datos, i);
     }
 }
 
-CLIENTE ingreso(CLIENTE datos[], int i){
+CLIENTE ingreso(CLIENTE datos[], int i)
+{
     CLIENTE aux;
+
     printf("Ingrese el numero de cliente: ");
-    leeyvalidaIntE2(&aux.cod, 1000, 9999);
-    while (busqueda(datos, i , aux.cod)!=-1)
+    aux.cod = leeyvalidaIntE2(COD_MIN, COD_MAX);
+    while (busqueda(datos, i, aux.cod) != -1)
     {
         printf("Cliente ya ingresado. Reingrese: ");
-        leeyvalidaIntE2(&aux.cod, 1000, 9999);
+        aux.cod = leeyvalidaIntE2(COD_MIN, COD_MAX);
     }
     printf("Ingrese nombre y apellido del cliente: ");
-    leeryValidarTexto(aux.nya, 51);
+    leeryValidarTexto(aux.nya, NYA_LEN);
 
     return aux;
 }
 
-int busqueda(CLIENTE datos[], int ce, int cod){
-    int pos=-1, i=0;
-    while (pos==-1 && i<ce)
+int busqueda(CLIENTE datos[], int ce, int cod)
+{
+    int pos = -1, i = 0;
+
+    while (pos == -1 && i < ce)
     {
-        if (datos[i].cod==cod)
+        if (datos[i].cod == cod)
         {
-            pos=i;
+            pos = i;
         }
         i++;
     }
     return pos;
 }
 
-void leeyvalidaF(float *dato, int lim){
-    scanf("%f", dato);
-    while (*dato<lim)
+int IngresoVentas(CLIENTE datos[], int ce, int cantVentasCliente[], float totalFacturado[], int ventasVendedor[])
+{
+    int cod, pos, vendedor, cant = 0;
+    float importe;
+
+    printf("--INGRESO VENTAS--\n");
+    printf("Ingrese codigo de cliente (999 para terminar): ");
+    cod = leeyvalidaIntE2CF(COD_MIN, COD_MAX, COD_FIN);
+    while (cod != COD_FIN)
     {
-        printf("Error. Reingrese: ");
-        scanf("%f", dato);
+        pos = busqueda(datos, ce, cod);
+        if (pos != -1)
+        {
+            printf("Ingrese importe: ");
+            importe = leeyvalidaF(1);
+            printf("Ingrese numero de vendedor (1-10): ");
+            vendedor = leeyvalidaIntE2(1, 10);
+
+            cantVentasCliente[pos]++;
+            totalFacturado[pos] += importe;
+            ventasVendedor[vendedor - 1]++;
+            cant++;
+        }
+        else
+        {
+            printf("El cliente no existe.\n");
+        }
+        printf("Ingrese codigo de cliente (999 para terminar): ");
+        cod = leeyvalidaIntE2CF(COD_MIN, COD_MAX, COD_FIN);
+    }
+    return cant;
+}
+
+void ordenarPorFacturado(CLIENTE datos[], float totalFacturado[], int ce)
+{
+    int i, j;
+    CLIENTE auxCliente;
+    float auxFacturado;
+
+    for (i = 0; i < ce - 1; i++)
+    {
+        for (j = 0; j < ce - 1 - i; j++)
+        {
+            if (totalFacturado[j] < totalFacturado[j + 1])
+            {
+                auxFacturado = totalFacturado[j];
+                totalFacturado[j] = totalFacturado[j + 1];
+                totalFacturado[j + 1] = auxFacturado;
+
+                auxCliente = datos[j];
+                datos[j] = datos[j + 1];
+                datos[j + 1] = auxCliente;
+            }
+        }
     }
 }
 
-void leeyvalidaIntE2(int *dato, int min, int max){
-    scanf("%d", dato);
-    while (*dato<min || *dato>max)
+void listado(CLIENTE datos[], float totalFacturado[], int ce)
+{
+    int i;
+
+    printf("%-10s%-30s%-20s\n", "CODIGO", "NOMBRE Y APELLIDO", "TOTAL FACTURADO");
+    for (i = 0; i < ce; i++)
     {
-        printf("Error. Reingrese: ");
-        scanf("%d", dato);
+        printf("%-10d%-30s$ %-18.2f\n", datos[i].cod, datos[i].nya, totalFacturado[i]);
     }
 }
 
-void leeyvalidaIntE2CF(int *dato, int min, int max, int cf){
-    scanf("%d", dato);
-    while ((*dato<min || *dato>max) && *dato!=cf)
+void mostrarVentasPorCliente(CLIENTE datos[], int cantVentasCliente[], int ce)
+{
+    int i;
+
+    for (i = 0; i < ce; i++)
     {
-        printf("Error. Reingrese: ");
-        scanf("%d", dato);
+        printf("%d ventas al cliente %d\n", cantVentasCliente[i], datos[i].cod);
     }
 }
 
-void leerTexto(char texto[], int largo){
-    int i=0;
+void mostrarVentasPorVendedor(int ventasVendedor[], int cant)
+{
+    int i;
+
+    for (i = 0; i < cant; i++)
+    {
+        printf("%d ventas del vendedor %d\n", ventasVendedor[i], i + 1);
+    }
+}
+
+int leeyvalidaInt(int lim)
+{
+    int dato;
+
+    scanf("%d", &dato);
+    while (dato < lim)
+    {
+        printf("Error. Reingrese: ");
+        scanf("%d", &dato);
+    }
+    return dato;
+}
+
+int leeyvalidaIntE2(int min, int max)
+{
+    int dato;
+
+    scanf("%d", &dato);
+    while (dato < min || dato > max)
+    {
+        printf("Error. Reingrese: ");
+        scanf("%d", &dato);
+    }
+    return dato;
+}
+
+int leeyvalidaIntE2CF(int min, int max, int cf)
+{
+    int dato;
+
+    scanf("%d", &dato);
+    while ((dato < min || dato > max) && dato != cf)
+    {
+        printf("Error. Reingrese: ");
+        scanf("%d", &dato);
+    }
+    return dato;
+}
+
+float leeyvalidaF(float lim)
+{
+    float dato;
+
+    scanf("%f", &dato);
+    while (dato < lim)
+    {
+        printf("Error. Reingrese: ");
+        scanf("%f", &dato);
+    }
+    return dato;
+}
+
+int leerTexto(char texto[], int largo)
+{
+    int i = 0;
+
     fflush(stdin);
     fgets(texto, largo, stdin);
-    while (texto[i]!='\0')
+    while (texto[i] != '\0')
     {
-        if (texto[i]=='\n')
+        if (texto[i] == '\n')
         {
-            texto[i]='\0';
+            texto[i] = '\0';
         }
-        i++;
+        else
+        {
+            i++;
+        }
     }
-
+    return i;
 }
 
-void leeryValidarTexto(char texto[], int largo){
-    leerTexto(texto, largo);
-    while (strlen(texto)==0)
+int leeryValidarTexto(char texto[], int largo)
+{
+    int len;
+
+    len = leerTexto(texto, largo);
+    while (len == 0)
     {
         printf("Error. Reingrese: ");
-        leerTexto(texto, largo);
+        len = leerTexto(texto, largo);
     }
-
+    return len;
 }

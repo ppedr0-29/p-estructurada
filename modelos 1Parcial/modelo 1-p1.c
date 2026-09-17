@@ -5,7 +5,7 @@ Formatos posibles: AAA999 ó AA999AA*/
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#define TAM 8
+#define TAM 20
 
 int validarF7(char patente[], int ce);
 int validarF6(char patente[], int ce);
