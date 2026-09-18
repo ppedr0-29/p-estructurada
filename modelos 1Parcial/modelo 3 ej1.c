@@ -1,19 +1,28 @@
-/*Ejercicio 1: 
-El SMN (Servicio Meteorológico Nacional) registra las precipitaciones mensuales en diferentes estaciones de medición 
-de una provincia durante un año. Los datos se reciben de forma desordenada a medida que llegan los reportes, hasta ingresar 
-un Número de Estación igual a 0 (cero). Por cada medición, se registra:
+/*Ejercicio 2: Un centro odontológico administra una agenda de 40 turnos para un día determinado. Cada turno se representa mediante una estructura con los siguientes datos:
 
-Estación Meteorológica: Dato numérico (1 a 8).
-Mes del año: Dato numérico (1 a 12, donde 1 es enero).
-Precipitación (mm): Dato numérico positivo.
+DNI del Paciente (entero).
 
-Se solicita almacenar los datos en una matriz de [8][12], acumulando los milímetros. 
-Pueden llegar varios reportes para la misma estación y mes.
-Los datos ingresados, deben ser validados. Implementar una función para validar que la Estación y el Mes estén 
-dentro de los rangos definidos antes de afectar la matriz. 
-Y también validar que la Precipitación sea un valor positivo.
+Nombre del Paciente (cadena de hasta 50 caracteres).
 
-Determinar e informar:
-a) Todas las combinaciones Estación-Mes con la mayor cantidad de mm acumulados registrados. Informar el valor máximo encontrado, y en qué Estación(es) y Mes(es) ocurrió.
-b) El total de lluvia anual acumulada por cada Estación de medición.
-c) Informar si existió algún mes donde todas las estaciones registraron 0 mm de lluvia (meses de sequía total).*/
+Estado del Turno (entero: 1 para "Pendiente", 2 para "Atendido", 3 para "Cancelado").
+
+Se deben ingresar los datos de los 40 turnos en un vector de estructuras. Al ingresar el DNI se debe validar que el paciente no tenga ya un turno asignado en el vector.
+Finalizada la carga se ingresará una secuencia de DNI de pacientes que van llegando a la recepción, terminando con DNI = 0.
+
+Si el DNI existe, se debe cambiar el estado del turno a 2: "Atendido".
+Si el DNI no existe, se lo contabilizara como "Paciente No Registrados".
+
+Informar:
+a) La cantidad total de pacientes que asistieron, pero no tenían turno.
+b) El listado completo de la agenda ordenado de forma ascendente por DNI, mostrando DNI, Nombre y el estado.
+
+Implementar al menos dos funciones: Una para la búsqueda del código en el vector de estructuras, y otra para el ordenamiento.*/
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+
+int main(){
+
+}
