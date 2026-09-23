@@ -52,9 +52,36 @@ void leeryValidarTexto(char[], int);
 int main(){
     PROD datos[TAM];
     int cantProductos;
+    float *resumen_recaudacion = NULL;
     cantProductos=IngresoProd(datos, TAM);
-    ventas(datos, cantProductos);
-    listado(datos, cantProductos);
+    if (cantProductos>0)
+    {
+        ventas(datos, cantProductos);
+        listado(datos, cantProductos);
+        resumen_recaudacion = (float *) malloc(cantProductos * sizeof(float)); 
+        if (resumen_recaudacion == NULL){
+        printf("\nError: No se pudo asignar memoria suficiente para el resumen.\n");}
+        else
+        {
+        for (int i = 0; i < cantProductos; i++) {
+            resumen_recaudacion[i] = datos[i].total;
+        }
+
+        printf("\n=== RESUMEN FINANCIERO ALMACENADO EN MEMORIA DINAMICA ===\n");
+        for (int i = 0; i < cantProductos; i++) {
+        printf("Posicion [%d] (Codigo %d) -> Monto Acumulado: $%.2f\n",i, datos[i].cod, resumen_recaudacion[i]);
+        }
+
+        
+        free(resumen_recaudacion);
+        resumen_recaudacion = NULL;
+        printf("\nMemoria dinamica liberada correctamente.\n");
+}
+    }else{
+        printf("No se ingresaron productos.\n");
+    }
+    
+    return 0;
 }
 
 int IngresoProd(PROD datos[], int ce){
@@ -99,8 +126,7 @@ PROD ingreso(PROD datos[], int i){
 
 void ventas(PROD datos[], int ce){
     VENTAS info;
-    float *v;
-    int pos, cantVentas;
+    int pos;
     printf("--VENTAS MES ACTUAL--\n");
     printf("Ingrese cantidad vendida: ");
     leeyvalidaInt(&info.cantV, 0);
@@ -120,16 +146,6 @@ void ventas(PROD datos[], int ce){
         printf("Ingrese cantidad vendida: ");
         leeyvalidaInt(&info.cantV, 0);
     }
-    printf("Ingrese la cantidad de ventas que se realizaron: ");
-    scanf("%d", &cantVentas);
-    v=(float*)malloc(cantVentas*sizeof(float));
-    if (v==NULL)
-    {
-        printf("Error al reservar memoria.");
-        exit(1);
-    }
-    
-    free(v);
 }
 
 void listado(PROD datos[], int ce){
