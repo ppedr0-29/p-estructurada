@@ -87,9 +87,9 @@ VISITA ingreso(VISITA *datos, int *ce)
     VISITA aux;
     printf("Ingrese el codigo (AAA-000): ");
     leeryvalidarTexto(aux.codigo, TXT);
-    while (strcmpi(aux.codigo, "FIN")!=0 && (leeryvalidarCod(aux.codigo, TXT)==0 || busqueda(datos, aux.codigo, ce)!=-1))
+    while (strcmpi(aux.codigo, "FIN")!=0 && (leeryvalidarCod(aux.codigo, 7)==0 || busqueda(datos, aux.codigo, ce)!=-1))
     {
-        if (leeryvalidarCod(aux.codigo, TXT)==0)
+        if (leeryvalidarCod(aux.codigo, 7)==0)
         {
             printf("Error de formato. Reingrese: ");
         }
@@ -116,7 +116,7 @@ void mensajeVisita(VISITA *datos, int *ce)
     printf("--BUSQUEDA INTERESADO--\n");
     printf("Ingrese el codigo: ");
     leeryvalidarTexto(cod, TXT);
-    while (leeryvalidarCod(cod, TXT)==0)
+    while (leeryvalidarCod(cod, 7)==0)
     {
         printf("Error de formato. Reingrese: ");
         leeryvalidarTexto(cod, TXT);
