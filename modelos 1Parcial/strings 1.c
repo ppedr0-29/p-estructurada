@@ -1,6 +1,9 @@
-/*El ministerio de transporte requiere un programa que permita validar si una patente es válida. 
-Realizar un programa en C que permita verificar si la patente es válida o no hasta que se ingrese la patente "FIN". 
-Formatos posibles: AAA999 ó AA999AA*/
+/*Se solicita realizar un programa en C para validar el formato de las patentes registradas en un sistema de tránsito. 
+El programa debe permitir el ingreso continuo de patentes por teclado hasta que se ingrese la palabra "FIN" (en mayúsculas) 
+como condición de fin.
+Una patente se considera válida si responde estrictamente a uno de los dos formatos vigentes:
+Formato Tradicional: 3 letras seguidas de 3 números (Ejemplo: AAA999).
+Formato Mercosur: 2 letras, 3 números y 2 letras(Ejemplo: AA999AA)*/
 
 #include <stdio.h>
 #include <string.h>
