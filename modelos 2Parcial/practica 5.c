@@ -68,7 +68,7 @@ void procesarArchivo(){
 
 void nuevoArchivo(){
     FILE *arch=abrirArchivo("sueldos.dat", "rb");
-    FILE *archA=abrirArchivo("administrativos.dat", "wb");
+    FILE *archA=abrirArchivo("administrativos.dat", "w+b");
     EMP datos;
     int cantR;
     fread(&datos, sizeof(datos), 1, arch);

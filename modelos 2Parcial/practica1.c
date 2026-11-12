@@ -5,7 +5,8 @@ descripcion (hasta 50 caracteres)
 categoria (entero: 1 = Herramientas, 2 = Pinturas, 3 = Electricidad)
 precio (float)
 Debido a cambios en los costos de proveedores, se solicita realizar un programa en C que:
-Ajuste masivo de precios: Solicite por teclado un porcentaje de aumento y el número de categoría a la cual aplicarlo. Actualice en el propio archivo Productos.dat
+Ajuste masivo de precios: Solicite por teclado un porcentaje de aumento y el número de categoría a la cual aplicarlo. 
+Actualice en el propio archivo Productos.dat
 únicamente el precio de los productos que pertenezcan a esa categoría.
 Conteo e informe: Informe por pantalla la cantidad total de registros grabados
 en el archivo y cuántos productos pertenecen a la categoría actualizada.
